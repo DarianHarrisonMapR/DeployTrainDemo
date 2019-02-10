@@ -5,7 +5,7 @@ import {LineChart} from 'react-easy-chart';
 import { CsvToHtmlTable } from 'react-csv-to-table';
 import mlp from './nnet.png';
 import rforest from './randomForest.png';
-
+/*import getDataFileList from './getDataFilesList.js';*/
 
 const logits = `
 feature,coefficient,p-value
@@ -85,81 +85,235 @@ class ShowSchema extends React.Component {
   } 
 }
 
-class SaveModels extends React.Component {
-  render() {
-   return (
-      <form> 
-      <label> <input name="nnet" type="checkbox" /> Neural Network
-        ---> Save model: <input type="text" value="mlp001_jwb"/> 
-      </label>  <br />
-      <label> <input name="nnet" type="checkbox" /> Gradient Boosted Trees
-        ---> Save model: <input type="text" value="gbt001_jwb"/> 
-      </label>  <br />
-      <label> <input name="nnet" type="checkbox" /> Random Forest
-        ---> Save model: <input type="text" value="rf001_jwb"/> 
-      </label>  <br />
-      <label> <input name="nnet" type="checkbox" /> Logistic Regression
-        ---> Save model: <input type="text" value="lreg001_jwb"/> 
-      </label>  <br />
-      <label> <input name="nnet" type="checkbox" /> SVM
-        ---> Save model: <input type="text" value="svm001_jwb"/> 
-      </label>  <br />
-      <label> <input name="nnet" type="checkbox" /> ENSEMBLE
-        ---> Save model: <input type="text" value="ensem001_jwb"/> 
-      </label>  
-      <br />
-      <input type="submit" value="EXPORT" />
-      </form>
-   );
-  }
-}
+
 
 
 class MachineLearning extends React.Component {
+      constructor(props) {
+    super(props);
+    this.state = {
+      isNeuralNetworks: false,
+      hiddenLayers: 2,
+      hiddenLayerNodes: 4.5,
+      isLogistigRegression: false,
+      isRandomForest:false,
+      nrTreesRF:400,
+      maxDepth:12,
+      isGradientBoosting:false,
+      nrTreesGB:200,
+      learnRate:.5,
+      isSvm:false,
+      train:.7,
+      dev:.15,
+      test:.15,
+      randomForest:.3,
+      logisticRegression:.3,
+      neuralNet:.4,      
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    alert('Logical Object : ' + this.state);
+    event.preventDefault();
+  }
+
   render() {
-   return (
-      <form> 
-      <label> <input name="nnet" type="checkbox" /> Neural Network
-        ---> Hidden Layers: <input type="text" value="2"/> 
-        , Hidden Layer Nodes: <input type="text" value="4,5"/>
-      </label> 
-      <br />
-      <label> <input name="lr" type="checkbox" /> Logistic Regression</label> 
-      <br />
-      <label> <input name="rf" type="checkbox" /> Random Forest
-        ---> No. Trees: <input type="text" value="400"/> 
-        ,Max Depth: <input type="text" value="12"/>
-      </label> 
-      <br />
-      <label> <input name="gb" type="checkbox" /> Gradient Boosting
-        ---> No. Trees: <input type="text" value="200"/> 
-        Learn Rate: <input type="text" value="0.05"/>
-      </label> 
-      <br />
-      <label> <input name="svm" type="checkbox" /> SVM </label> 
-      <br />
-      <input type="submit" value="SUBMIT" />
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>     
+          <input
+            name="isNeuralNetworks"
+            type="checkbox"
+            checked={this.state.isNeuralNetworks}
+            onChange={this.handleInputChange} />
+        </label>
+        Neural Network --->
+        <label>
+          Hidden Layers:
+          <input
+            name="hiddenLayers"
+            type="number"
+            value={this.state.hiddenLayers}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          Hidden Layer Nodes:
+          <input
+            name="hiddenLayerNodes"
+            type="number"
+            value={this.state.hiddenLayerNodes}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>
+          <input
+            name="isLogistigRegression"
+            type="checkbox"
+            checked={this.state.islogistigRegression}
+            onChange={this.handleInputChange} />
+            Logistic Regression
+        </label><br />
+        <label>
+          <input
+            name="isRandomForest"
+            type="checkbox"
+            checked={this.state.israndomForest}
+            onChange={this.handleInputChange} />
+            Random Forest --->
+        </label>
+        <label>
+          No. Trees:
+          <input
+            name="nrTreesRF"
+            type="number"
+            value={this.state.nrTreesRF}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          Max Depth:
+          <input
+            name="maxDepth"
+            type="number"
+            value={this.state.maxDepth}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>
+          <input
+            name="isGradientBoosting"
+            type="checkbox"
+            checked={this.state.israndomForest}
+            onChange={this.handleInputChange} />
+            Gradient Boosting --->
+        </label>        
+        <label>
+          No Trees:
+          <input
+            name="nrTreesGB"
+            type="number"
+            value={this.state.nrTreesGB}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          learnRate:
+          <input
+            name="learnRate"
+            type="number"
+            value={this.state.learnRate}
+            onChange={this.handleInputChange} />
+        </label>        
+        <label><br />   
+          <input
+            name="isSvm"
+            type="checkbox"
+            checked={this.state.isSvm}
+            onChange={this.handleInputChange} />
+        </label>SVM<br />              
       </form>
-   );
+    );
   }
 }
 
 class Choices extends React.Component {
+      constructor(props) {
+    super(props);
+    this.state = {
+          train:.7,
+          dev:.15,
+          test:.15,
+          randomForest:.3,
+          logisticRegression:.3,
+          neuralNet:.4,
+
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+ handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    alert('Train with Params : ' + this.state);
+    event.preventDefault();
+  }
+
   render() {
-   return (
-      <form> 
-       <label> Train sample ratio <input type="text" value="0.5" /> </label>
-       <br />
-       <b> Weighting for Ensemble...</b> <br />
-       <label> Random Forest <input type="text" value="0.3" /> </label>
-       <br />
-       <label> Logistic Reg. <input type="text" value="0.3" /> </label>
-       <br />
-       <label> Neural Net <input type="text" value="0.4" /> </label>
-       <br />
-       <input type="submit" value="TRAIN MODEL(S)" />
+    return (
+      <form onSubmit={this.handleSubmit}>
+      <b>Train Sample Ratio</b><br />
+        <label>
+          Train
+          <input
+            name="train"
+            type="number"
+            value={this.state.train}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          Dev
+          <input
+            name="dev"
+            type="number"
+            value={this.state.dev}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          Test
+          <input
+            name="test"
+            type="number"
+            value={this.state.test}
+            onChange={this.handleInputChange} />
+        </label><br /><br />
+        <b>Weighting for Ensemble</b><br />
+        <label>
+          Random Forest
+          <input
+            name="randomForest"
+            type="number"
+            value={this.state.randomForest}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          Logistic Regression
+          <input
+            name="logisticRegression"
+            type="number"
+            value={this.state.logisticRegression}
+            onChange={this.handleInputChange} />
+        </label>
+        <label>
+          Neural Net
+          <input
+            name="neuralNet"
+            type="number"
+            value={this.state.neuralNet}
+            onChange={this.handleInputChange} />
+        </label><br /><br />
+        <input type="submit" value="Train Model(s)" /><input type="submit" value="manual Halt" />
       </form>
-   ); }
+    );
+  }
 }
 
 ///// Get file input from user
@@ -176,10 +330,157 @@ class InputFile extends React.Component {
 }
 
 
-class Calculator extends React.Component {
+class SaveModels extends React.Component {
+      constructor(props) {
+    super(props);
+    this.state = {
+      isNN: false,
+      pathNN: '',
+      isGBT: false,
+      pathGBT: '',
+      isRF: false,
+      pathRF: '',
+      isLR: false,
+      pathLR: '',
+      isSVM: false,
+      pathSVM: '',
+      isEnsemble: false,
+      pathEnsemble:'',                               
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+
+
+ handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    alert('Save Models : ' + this.state);
+    event.preventDefault();
+  }
+
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>     
+          <input
+            name="isNN"
+            type="checkbox"
+            checked={this.state.isNN}
+            onChange={this.handleInputChange} />
+        </label>
+        Neural Network --->
+        <label>
+          Save model:
+          <input
+            name="pathNN"
+            type="string"
+            value={this.state.pathNN}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>     
+          <input
+            name="isGBT"
+            type="checkbox"
+            checked={this.state.isGBT}
+            onChange={this.handleInputChange} />
+        </label>
+        Gradient Boosted Trees --->
+        <label>
+          Save model:
+          <input
+            name="pathGBT"
+            type="string"
+            value={this.state.pathGBT}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>     
+          <input
+            name="isRF"
+            type="checkbox"
+            checked={this.state.isRF}
+            onChange={this.handleInputChange} />
+        </label>
+        Random Forest --->
+        <label>
+          Save model:
+          <input
+            name="pathRF"
+            type="string"
+            value={this.state.pathRF}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>     
+          <input
+            name="isLR"
+            type="checkbox"
+            checked={this.state.isLR}
+            onChange={this.handleInputChange} />
+        </label>
+        Logistic Regression --->
+        <label>
+          Save model:
+          <input
+            name="pathLR"
+            type="string"
+            value={this.state.pathLR}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>     
+          <input
+            name="isSVM"
+            type="checkbox"
+            checked={this.state.isSVM}
+            onChange={this.handleInputChange} />
+        </label>
+        SVM --->
+        <label>
+          Save model:
+          <input
+            name="pathSVM"
+            type="string"
+            value={this.state.pathSVM}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <label>     
+          <input
+            name="isEnsemble"
+            type="checkbox"
+            checked={this.state.isEnsemble}
+            onChange={this.handleInputChange} />
+        </label>
+        ENSEMBLE --->
+        <label>
+          Save model:
+          <input
+            name="pathEnsemble"
+            type="string"
+            value={this.state.pathEnsemble}
+            onChange={this.handleInputChange} />
+        </label><br />
+        <input type="submit" value="Submit" />                                     
+      </form>
+    );
+  }
+}
+
+
+class App extends React.Component {
   constructor(props) {
     super(props); this.state = {filename: 'features.csv'}
   }
+
 
   render() {
     var filename = this.state.filename;
@@ -230,7 +531,7 @@ class Calculator extends React.Component {
 
 
 ReactDOM.render(
-  <Calculator />,
+  <App />,
   document.getElementById('root')
 );
 
